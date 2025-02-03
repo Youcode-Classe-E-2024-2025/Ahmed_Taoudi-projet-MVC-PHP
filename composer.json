@@ -1,0 +1,17 @@
+{
+    "name": "projet-mvc-php",
+    "autoload": {
+        "psr-4": {
+            "app\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Tawdi",
+            "email": "ahmed.taoudi.28@gmail.com"
+        }
+    ],
+    "require": {
+        "twig/twig": "^3.19"
+    }
+}
