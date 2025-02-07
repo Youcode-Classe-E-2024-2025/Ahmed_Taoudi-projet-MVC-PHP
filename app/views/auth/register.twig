@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArticleSpace - Inscription</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <div class="text-center">
+                <h1 class="text-3xl font-bold text-emerald-600">ArticleSpace</h1>
+                <h2 class="mt-6 text-3xl font-bold text-gray-900">Créer un compte</h2>
+                <p class="mt-2 text-sm text-gray-600">
+                    Ou
+                    <a href="/login" class="font-medium text-emerald-600 hover:text-emerald-500">
+                        connectez-vous à votre compte
+                    </a>
+                </p>
+            </div>
+
+            <!-- Error Messages -->
+            {% if errors is defined and errors|length > 0 %}
+                <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="ri-error-warning-line text-red-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            {% for error in errors %}
+                                <p class="text-sm text-red-700">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if flash.error %}
+                <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="ri-error-warning-line text-red-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-red-700">{{ flash.error }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if flash.message %}
+                <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="ri-check-line text-green-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-green-700">{{ flash.message }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Registration Form -->
+            <form class="mt-8 space-y-6" action="/register" method="POST" onsubmit="return validateForm()">
+                <div class="rounded-md shadow-sm space-y-4">
+                    <div>
+                        <!-- CSRF Token -->
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+                        <label for="name" class="block text-sm font-medium text-gray-700">
+                            Nom complet
+                        </label>
+                        <input id="name" name="name" type="text"
+                            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 sm:text-sm"
+                            value="{{ old.name ?? '' }}"
+                            placeholder="Votre nom complet">
+                        <p id="name-error" class="mt-1 text-xs text-red-500 hidden">Le nom est requis.</p>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">
+                            Adresse email
+                        </label>
+                        <input id="email" name="email" type="email"
+                            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 sm:text-sm"
+                            value="{{ old.email ?? '' }}"
+                            placeholder="exemple@email.com">
+                        <p id="email-error" class="mt-1 text-xs text-red-500 hidden">Veuillez entrer une adresse email valide.</p>
+                    </div>
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">
+                            Mot de passe
+                        </label>
+                        <input id="password" name="password" type="password"
+                            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 sm:text-sm"
+                            placeholder="••••••••">
+                        <p id="password-error" class="mt-1 text-xs text-red-500 hidden">
+                            Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre.
+                        </p>
+                    </div>
+                    <div>
+                        <label for="confirm_password" class="block text-sm font-medium text-gray-700">
+                            Confirmer le mot de passe
+                        </label>
+                        <input id="confirm_password" name="confirm_password" type="password"
+                            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 sm:text-sm"
+                            placeholder="••••••••">
+                        <p id="confirm-password-error" class="mt-1 text-xs text-red-500 hidden">
+                            Les mots de passe ne correspondent pas.
+                        </p>
+                    </div>
+
+                </div>
+                <div>
+                    <button type="submit"
+                        class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <i class="ri-user-add-line text-emerald-500 group-hover:text-emerald-400"></i>
+                        </span>
+                        Créer un compte
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function validateForm() {
+            // Reset error messages
+            document.querySelectorAll('.text-red-500').forEach(el => el.classList.add('hidden'));
+
+            // Validate Name
+            const name = document.getElementById('name').value.trim();
+            if (!name) {
+                document.getElementById('name-error').classList.remove('hidden');
+                return false;
+            }
+
+            // Validate Email
+            const email = document.getElementById('email').value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                document.getElementById('email-error').classList.remove('hidden');
+                return false;
+            }
+
+            // Validate Password
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+            if (!passwordRegex.test(password)) {
+                document.getElementById('password-error').classList.remove('hidden');
+                return false;
+            }
+            if (password !== confirmPassword) {
+                document.getElementById('confirm-password-error').classList.remove('hidden');
+                return false;
+            }
+
+           
+            return true; // Form is valid
+        }
+    </script>
+</body>
+</html>
