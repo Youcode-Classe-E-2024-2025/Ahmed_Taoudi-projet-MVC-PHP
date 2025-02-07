@@ -23,9 +23,11 @@ abstract class Model
 
     abstract public function create() ;
     
-    abstract public function read() ;
+    abstract public static  function read($id) ;
+
+    abstract public static  function readAll() ;
     
     abstract public function update() ;
     
-    abstract public function delete() ;
+    abstract public static function delete($id) ;
 }
