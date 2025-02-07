@@ -25,7 +25,29 @@ class Article extends Model
         $this->author = $author;
         $this->created_at = $created_at;
     }
+ /**
+     * Magic getter for accessing protected properties
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        return $this->$name ?? null;
+    }
 
+    /**
+     * Magic setter for setting protected properties
+     *
+     * @param string $name
+     * @param mixed $value
+     */
+    public function __set($name, $value)
+    {
+        if (property_exists($this, $name)) {
+            $this->$name = $value;
+        }
+    }
     /**
      * Create a new article
      *
@@ -62,7 +84,9 @@ class Article extends Model
         $params = [':id' => $id];
 
         $db->query($sql, $params);
-        return $db->fetch();
+        $row = $db->fetch();
+        $article = new Article($row['id'],$row['title'],$row['content'],User::read($row['author_id']) ,$row['created_at']);
+        return $article;
     }
 
     /**
@@ -76,7 +100,8 @@ class Article extends Model
         $sql = "SELECT * FROM articles";
 
         $db->query($sql);
-        return $db->fetchAll();
+        $rows= $db->fetchAll();
+        return self::toObjects($rows);
     }
 
     /**
@@ -92,7 +117,7 @@ class Article extends Model
             ':id' => $this->id,
             ':title' => $this->title,
             ':content' => $this->content,
-            ':author_id' => $this->author
+            ':author_id' => $this->author->id
         ];
 
         return $db->query($sql, $params);
@@ -111,5 +136,34 @@ class Article extends Model
         $params = [':id' => $id];
 
         return $db->query($sql, $params);
+    }
+
+    /**
+     * return the last $n Articles
+     * 
+     * @param int $n
+     * @return array
+     */
+    public static function last($n)
+    {
+         $db = Database::getInstance();
+         $sql = "SELECT * FROM articles ORDER BY created_at , id  DESC LIMIT  ". (int)$n;
+         $db->query($sql);
+         $rows = $db->fetchAll();
+         return self::toObjects($rows);
+    }
+    /**
+     * create article objects 
+     * 
+     * @param array $rows
+     * @return array
+     */
+    private static function toObjects($rows){
+     $data=[];
+     foreach ($rows as $row) {
+          $author = User::read($row['author_id']) ?? new User();
+          $articles[] = new Article($row['id'], $row['title'], $row['content'], $author, $row['created_at']);
+      }
+      return $articles;
     }
 }

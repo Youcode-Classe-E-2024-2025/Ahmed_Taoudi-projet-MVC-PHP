@@ -1,5 +1,5 @@
 {
-    "name": "projet-mvc-php",
+    "name": "tawdi/projetmvcphp",
     "autoload": {
         "psr-4": {
             "app\\": "app/"
@@ -12,6 +12,7 @@
         }
     ],
     "require": {
-        "twig/twig": "^3.19"
+        "twig/twig": "^3.19",
+        "vlucas/phpdotenv": "^5.6"
     }
 }

@@ -6,31 +6,22 @@ use app\core\Controller;
 use app\core\Security;
 use app\core\Session;
 use app\core\View;
+use app\models\Article;
 
 class HomeController extends Controller
 {
     public function index()
     {
         // Sample data for articles
-        $articles = [
-            [
-                'title' => 'How to Use Tailwind CSS',
-                'author' => 'John Doe',
-                'content' => 'Tailwind CSS is a utility-first CSS framework...',
-                'date' => '2023-10-01'
-            ],
-            [
-                'title' => 'Introduction to Twig',
-                'author' => 'Jane Smith',
-                'content' => 'Twig is a powerful templating engine for PHP...',
-                'date' => '2023-10-05'
-            ]
-        ];
+        $articles = Article::last(3);
+        // echo "<pre>";
+        // var_dump($articles);
+        // echo "</pre>";
 
         $twig = View::getTwig();
         $data = [
             'articles' => $articles,
-            'user'=>Session::getData('user'),
+            'user'=>Session::getUser(),
             'flash' => [
                 'error' => Session::getFlashMessage('error'),
                 'message' => Session::getFlashMessage('message')
@@ -49,6 +40,7 @@ class HomeController extends Controller
     {
         return $this->showForm('register');
     }
+
     private function showForm($name)
     {
         $data = [

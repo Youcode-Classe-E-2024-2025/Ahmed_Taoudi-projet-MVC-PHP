@@ -15,7 +15,10 @@ class View
             
             $loader = new FilesystemLoader(__DIR__ . '/../views'); 
 
-            self::$twig = new Environment($loader);
+            self::$twig = new Environment($loader , [
+                'debug' => true,
+                'cache' => false, 
+            ]);
         }
 
         return self::$twig;

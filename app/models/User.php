@@ -22,7 +22,29 @@ class User extends Model
         $this->role = $role;
     }
 
+ /**
+     * Magic getter for accessing protected properties
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        return $this->$name ?? null;
+    }
 
+    /**
+     * Magic setter for setting protected properties
+     *
+     * @param string $name
+     * @param mixed $value
+     */
+    public function __set($name, $value)
+    {
+        if (property_exists($this, $name)) {
+            $this->$name = $value;
+        }
+    }
     public function create(): bool
     {
         $db = Database::getInstance();
@@ -47,13 +69,35 @@ class User extends Model
         }
     }
 
-    public static function read($id){
+    public static function read($id)
+    {
+        $db = Database::getInstance();
+        $sql = "SELECT * FROM users WHERE id = :id";
+        $params = [':id' => $id];
 
+        $db->query($sql, $params);
+        $data = $db->fetch();
+        $user=null;
+        if($data){
+            $user = new User($data['name'],$data['email'],'',Role::from($data['role']));
+            $user->id = $data['id'];
+        }
+        return $user;
     } 
 
-    public static function readAll(){
+    /**
+     * Read all users
+     *
+     * @return array
+     */
+    public static function readAll()
+    {
+        $db = Database::getInstance();
+        $sql = "SELECT * FROM users Where role != :admin ";
 
-    } 
+        $db->query($sql,['admin'=> Role::ADMIN->value]);
+        return $db->fetchAll();
+    }
     
     public function update(){
 
