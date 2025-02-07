@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouDemy - Gestion des utilisateurs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+
+
+    <div class="min-h-screen flex">
+        <!-- Sidebar -->
+    {% include('partials/admin/sidebar.twig') %}
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-2xl font-bold text-gray-900">Gestion des utilisateurs</h1>
+                <a href="/logout"
+                   class="rounded-md bg-emerald-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600 flex items-center">
+                    <span class="ml-1">Déconnexion</span>
+                    <i class="ri-logout-circle-r-line text-xs ml-1"></i>
+                </a>
+            </div>
+
+            <!-- User List -->
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-2 text-left font-medium text-gray-900">#</th>
+                            <th class="px-4 py-2 text-left font-medium text-gray-900">Nom complet</th>
+                            <th class="px-4 py-2 text-left font-medium text-gray-900">Email</th>
+                            <th class="px-4 py-2 text-left font-medium text-gray-900">Rôle</th>
+                            <th class="px-4 py-2 text-left font-medium text-gray-900">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-2">{{ loop.index }}</td>
+                                <td class="px-4 py-2">{{ user.name }}</td>
+                                <td class="px-4 py-2">{{ user.email }}</td>
+                                <td class="px-4 py-2">{{ user.role | capitalize }}</td>
+                                <td class="px-4 py-2">
+                                    <a href="/admin/users/edit/{{ user.id }}"
+                                       class="text-blue-600 hover:text-blue-500 mr-2">
+                                        <i class="ri-edit-line"></i>
+                                    </a>
+                                    <a href="/admin/users/delete/{{ user.id }}"
+                                       class="text-red-600 hover:text-red-500"
+                                       onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-gray-600">
+                                    Aucun utilisateur trouvé.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
